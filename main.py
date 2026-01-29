@@ -16,9 +16,8 @@ from model import SymbolicRegressor, MultiTermRegressor
 from trainer import SymbolicRegressionTrainer
 from simplify import print_expression_report
 
-# =============================================================================
 # STEP 1: ENTER YOUR DATA HERE
-# =============================================================================
+
 
 # Format: Each row is one sample [x1, x2, ...] 
 # Add more columns if you have more input variables
@@ -36,9 +35,9 @@ Y_DATA = [4.01, 15.38, -7.93, 29.25]
 # Names for your variables (optional, for nicer output)
 VARIABLE_NAMES = ["x1", "x2"]
 
-# =============================================================================
+
 # STEP 2: TRAINING SETTINGS (adjust if needed)
-# =============================================================================
+
 
 MAX_DEPTH = 4          # Maximum expression tree depth (2-4 recommended)
 N_CANDIDATES = 8       # Number of candidate expressions to try
