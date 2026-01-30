@@ -1,264 +1,165 @@
-# PyTorch Symbolic Regression
+# Symbolic Regression Framework
 
-A differentiable symbolic regression implementation in PyTorch that discovers mathematical equations from data. Inspired by [PySR](https://github.com/MilesCranmer/PySR), but uses gradient descent only — no evolutionary algorithms.
+A PyTorch-based symbolic regression system for discovering mathematical formulas from data.
 
-## Features
 
-- Automatic equation discovery from data
-- 100% gradient-based optimization (backpropagation only)
-- Extracts human-readable symbolic expressions
-- Native PyTorch integration
-- Complexity regularization for simpler equations
+## Overview
 
-## Quick Start
+Symbolic regression finds mathematical expressions that best fit a given dataset. Unlike traditional regression which fits parameters to a fixed model, symbolic regression searches over the space of possible mathematical expressions to find both the structure and parameters.
 
-```bash
-git clone https://github.com/YOUR_USERNAME/pytorch-symbolic-regression.git
-cd pytorch-symbolic-regression
+This project implements a differentiable approach where operator selection is relaxed using softmax-weighted mixtures, enabling gradient-based optimization of the entire expression tree.
 
-python -m venv venv
-source venv/bin/activate  # Linux/Mac
-# or: .\venv\Scripts\Activate.ps1  # Windows
-
-pip install -r requirements.txt
-python example.py 1
-```
-
-## Benchmark Results (Feynman Equations)
-
-Tested on physics equations from the Feynman Lectures:
-
-| Equation | True Formula | R² Score |
-|----------|-------------|----------|
-| Kinetic Energy | `0.5 * m * v²` | 0.9995 |
-| Electric Field | `q / r²` | 0.9999 |
-| Wave Number | `ω / c` | 1.0000 |
-
-Mean R²: 0.9998
-
-Run: `python feynman_fast.py`
-
-## Usage
-
-```python
-import torch
-from model import SymbolicRegressor
-from trainer import SymbolicRegressionTrainer
-
-x = torch.rand(500, 1) * 10 - 5
-y = x[:, 0]**2 + 2*x[:, 0] + 1
-
-model = SymbolicRegressor(n_features=1, max_depth=3, n_candidates=5)
-trainer = SymbolicRegressionTrainer(model, learning_rate=0.02)
-trainer.fit(x, y, n_epochs=2000, verbose=1)
-
-print(model.simplify(["x"]))  # ((x * x) + (x + x)) + 1
-```
-
-Or edit `main.py` with your data and run `python main.py`.
 
 ## Project Structure
 
 ```
-operators.py      - Operator definitions (+, -, *, /, sin, cos, exp, log)
-nodes.py          - Symbolic tree nodes
-model.py          - SymbolicRegressor, MultiTermRegressor
-trainer.py        - Training loop
-simplify.py       - Expression extraction
-main.py           - Entry point for custom data
-example.py        - Examples on synthetic data
-feynman_fast.py   - Benchmark
-LIMITATIONS.md    - Known limitations
+symbolic_regression/
+|-- pysr_baseline/              # Core implementation
+|   |-- operators.py            # Mathematical operators (unary/binary)
+|   |-- nodes.py                # Expression tree node classes
+|   |-- model.py                # SymbolicRegressor model
+|   |-- trainer.py              # Training loop and optimization
+|
+|-- enhancements/               # Optimization extensions
+|   |-- dp_memoization/         # Dynamic programming for faster evaluation
+|   |-- hybrid_optimization/    # Evolutionary + gradient hybrid search
+|
+|-- benchmarks/                 # Performance evaluation
+|-- tests/                      # Unit and integration tests (37 tests)
+|-- logs/                       # Development documentation
+|
+|-- run.py                      # Main entry point
+|-- requirements.txt            # Dependencies
 ```
 
-## How It Works
 
-Operators are selected via softmax-weighted mixtures (continuous relaxation of discrete choice). All constants are `nn.Parameter` optimized via gradient descent. Loss = MSE + λ × complexity.
+## Installation
 
-After training, dominant operators are discretized to get a readable formula.
+```bash
+pip install -r requirements.txt
+```
 
-## Limitations
+Or simply:
+```bash
+pip install torch
+```
 
-See [LIMITATIONS.md](LIMITATIONS.md). Main issues:
-- Fixed tree structure
-- Softmax operators (not truly discrete)
-- Can get stuck in local minima
-- Slower than evolutionary approaches
-
-## Comparison with PySR
-
-| Aspect | This Model | PySR |
-|--------|-----------|------|
-| Optimization | Gradient descent | Evolutionary + gradient |
-| Structure | Fixed | Dynamic |
-| Speed | Slower | Faster |
-
-## Module Details
-
-### operators.py
-Defines the fixed operator space:
-- **Binary operators**: `+`, `-`, `*`, `/` (protected division with ε)
-- **Unary operators**: `sin`, `cos`, `exp`, `log` (protected), `identity`, `neg`, `square`, `sqrt`
-- **Power operator**: `x^p` with learnable exponent p, implemented as `exp(p * log(|x| + ε))`
-- **Operator mixtures**: Softmax-weighted combinations for continuous relaxation of discrete operator selection
-
-### nodes.py
-Symbolic tree node classes:
-- `VariableNode`: Input features x_i
-- `ConstantNode`: Learnable constants (`nn.Parameter`)
-- `UnaryOpNode`: Unary operator with softmax-weighted mixture
-- `BinaryOpNode`: Binary operator with softmax-weighted mixture
-- `PowerNode`: Power operation with learnable exponent
-- `LinearCombinationNode`: Weighted sum of child nodes
-- `WeightedInputNode`: Soft selection of input variables
-
-### model.py
-Main symbolic regression models:
-- `SymbolicExpression`: Single expression tree with fixed structure
-- `SymbolicRegressor`: Multiple candidate expressions with learned combination
-- `MultiTermRegressor`: Additive model with explicit term structure
-
-### trainer.py
-Training utilities:
-- `SymbolicRegressionTrainer`: Full training loop with gradient-based optimization
-- Support for Adam and SGD optimizers
-- Complexity penalty scheduling (constant, linear, warmup)
-- Early stopping and validation
-
-### simplify.py
-Post-training tools:
-- `ExpressionSimplifier`: Discretize operators, round constants, prune branches
-- `extract_expression`: Get structured expression information
-- `print_expression_report`: Pretty-print learned expression
-- `ExpressionEvaluator`: Evaluate extracted expressions
 
 ## Usage
 
-### Basic Example
+Run the demo:
+```bash
+python run.py
+```
+
+Run tests:
+```bash
+python run.py --test
+```
+
+Run benchmarks:
+```bash
+python run.py --benchmark
+```
+
+
+## Quick Start
 
 ```python
 import torch
-from model import SymbolicRegressor
-from trainer import SymbolicRegressionTrainer
-from simplify import print_expression_report
+from pysr_baseline.model import SymbolicRegressor
+from pysr_baseline.trainer import SymbolicRegressionTrainer
 
-# Generate synthetic data: f(x) = x^2 + 2*x + 1
-x = torch.rand(500, 1) * 10 - 5  # x in [-5, 5]
-y = x[:, 0]**2 + 2*x[:, 0] + 1
+# Generate data for y = x^2 + 2x + 1
+x = torch.linspace(-3, 3, 100).unsqueeze(1)
+y = x**2 + 2*x + 1
 
-# Create model
-model = SymbolicRegressor(
-    n_features=1,
-    max_depth=3,
-    n_candidates=3,
-    complexity_weight=0.001
-)
+# Create and train model
+model = SymbolicRegressor(n_features=1, max_depth=3, n_candidates=5)
+trainer = SymbolicRegressionTrainer(model, complexity_weight=0.01)
+trainer.fit(x, y, n_epochs=200)
 
-# Train
-trainer = SymbolicRegressionTrainer(
-    model=model,
-    optimizer="adam",
-    learning_rate=0.05,
-    complexity_weight=0.001
-)
-
-results = trainer.fit(
-    x, y,
-    n_epochs=2000,
-    batch_size=64,
-    verbose=1
-)
-
-# Print learned expression
-print_expression_report(model, var_names=["x"])
-
-# Get simplified expression string
-simplified = model.simplify(var_names=["x"])
-print(f"f(x) = {simplified}")
+# Get discovered formula
+print(model.simplify())
 ```
 
-### Run Examples
 
+## Technical Approach
+
+### Differentiable Expression Trees
+
+Each node in the expression tree maintains softmax weights over available operators. During forward pass, the output is a weighted combination of all operator outputs. During training, these weights converge toward selecting specific operators.
+
+This allows:
+- End-to-end gradient flow through the expression
+- Smooth optimization landscape
+- Standard PyTorch autograd compatibility
+
+### Dynamic Programming Optimization
+
+The DP memoization enhancement caches subtree evaluation results to avoid redundant computation. Key components:
+
+- **ExpressionCache**: LRU cache storing (structure_hash, input_hash) -> output
+- **SubproblemTable**: Stores optimal subexpressions per complexity level
+- **StructureHasher**: Canonical hashing handling operator commutativity
+- **IncrementalEvaluator**: Recomputes only modified subtrees
+
+### Hybrid Optimization
+
+Combines evolutionary search (for structure) with gradient descent (for parameters):
+
+- **Population**: Maintains diverse candidate solutions
+- **Mutation**: Parameter, operator, and feature mutations
+- **Crossover**: Parameter blending between successful individuals
+- **Selection**: Tournament selection with elitism
+
+
+## Supported Operators
+
+| Type | Operators |
+|------|-----------|
+| Binary | add, subtract, multiply, divide (protected) |
+| Unary | sin, cos, exp, log (protected), sqrt, square, neg, identity |
+
+
+## Performance Results
+
+Comparison on standard benchmark functions (100 epochs, averaged over 3 runs):
+
+| Method | Average Time | Speedup |
+|--------|--------------|---------|
+| Baseline | 8.53s | 1.0x |
+| DP-Optimized | 2.99s | 2.9x |
+
+The DP optimization achieves significant speedup by caching repeated subtree evaluations.
+
+
+## Tests
+
+The test suite covers:
+- Operator correctness and numerical stability
+- Node construction and evaluation
+- Model forward pass and gradient flow
+- Trainer functionality
+- DP caching mechanisms
+- Hybrid optimization components
+- End-to-end integration
+
+Run with:
 ```bash
-# Run all examples
-python example.py
-
-# Run specific example (1-6)
-python example.py 1  # Simple polynomial
-python example.py 2  # Trigonometric function
-python example.py 3  # Multivariate function
-python example.py 4  # Physical law (Kepler's 3rd)
-python example.py 5  # Noisy data
-python example.py 6  # Exponential function
+python tests/test_suite.py
 ```
 
-## Model Architecture
-
-### Symbolic Expression Tree
-Expressions are represented as explicit computation graphs:
-
-```
-        BinaryOp (softmax over +,-,*,/)
-        /           \
-    UnaryOp         UnaryOp (softmax over sin,cos,exp,log,...)
-       |               |
-  WeightedInput   ConstantNode
-   (softmax)        (learnable)
-```
-
-### Candidate Ensemble
-The `SymbolicRegressor` maintains multiple candidate expressions with different structures:
-- Binary trees of varying depths
-- Mixed trees with unary/binary nodes
-- Unary chains
-
-Final output is a softmax-weighted combination of candidates, allowing the model to learn which structure best fits the data.
-
-### Loss Function (PySR-style)
-```
-Total Loss = MSE + λ × Complexity
-```
-Where complexity includes:
-- Operator complexity (weighted by softmax probabilities)
-- Number of active nodes
-- Non-zero constant penalties
-
-## Key Design Decisions
-
-1. **Softmax-weighted operator selection**: Provides continuous relaxation of discrete operator choices, enabling gradient-based optimization.
-
-2. **Multiple candidate structures**: Similar to PySR's population of expressions at different complexity levels.
-
-3. **Complexity penalty**: Biases search toward simpler expressions (Occam's razor).
-
-4. **Protected operators**: Division and logarithm use ε-stabilization for numerical safety.
-
-5. **Post-training discretization**: After training, dominant operators are selected and expressions are simplified.
-
-## Comparison with PySR
-
-| Aspect | PySR | This Implementation |
-|--------|------|---------------------|
-| Optimization | Evolutionary + gradient | Gradient only |
-| Operator selection | Discrete mutations | Softmax mixture |
-| Expression structure | Variable | Fixed candidates |
-| Constant optimization | BFGS/gradient | Gradient (Adam/SGD) |
-| Complexity control | Pareto front | Regularization penalty |
-| Simplification | SymPy | Custom rules |
-
-## Limitations
-
-- Fixed expression structure (cannot dynamically grow/shrink trees)
-- Softmax mixture may not fully converge to single operator
-- Complex expressions may require many candidates
-- Training may need tuning for different problem types
 
 ## References
 
-- [PySR](https://github.com/MilesCranmer/PySR)
-- Cranmer, M. (2023). Interpretable Machine Learning for Science with PySR
-- Udrescu & Tegmark (2020). AI Feynman
+1. Cranmer, M. (2023). Interpretable Machine Learning for Science with PySR and SymbolicRegression.jl. arXiv:2305.01582
+
+2. Koza, J.R. (1992). Genetic Programming: On the Programming of Computers by Means of Natural Selection. MIT Press.
+
+3. Bellman, R. (1957). Dynamic Programming. Princeton University Press.
+
 
 ## License
 
-MIT
+MIT License
