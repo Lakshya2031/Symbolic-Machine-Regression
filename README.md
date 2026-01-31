@@ -47,6 +47,31 @@ graph TD
 
 ---
 
+## Baseline Implementation
+
+The `pysr_baseline/` directory contains my implementation of the core symbolic regression model. I built this from scratch using PyTorch to understand how the differentiable approach works before adding optimizations.
+
+**How it works:**
+- The model is a standard `nn.Module` that builds expression trees using learnable parameters
+- Each node in the tree can be different operators (add, multiply, sin, etc.) and the model learns which ones to use via softmax weights
+- I maintain several candidate expressions at once and the model picks the best one during training
+- Training uses Adam optimizer with a loss that balances accuracy (MSE) and complexity
+
+**What's in the baseline:**
+- `operators.py` - All the math operations (binary: +, -, *, /; unary: sin, cos, exp, log, sqrt)
+- `nodes.py` - Building blocks for the expression trees (variables, constants, operator nodes)
+- `model.py` - The main SymbolicRegressor class that ties everything together
+- `trainer.py` - Training loop with gradient descent
+
+**Data format:**
+- Works with regular PyTorch tensors, nothing fancy
+- Input shape: `(batch_size, n_features)` 
+- Output: predictions as `(batch_size,)` plus a human-readable formula from `.simplify()`
+
+The baseline works well but gets pretty slow on harder problems - that's why I added the DP optimization which speeds things up significantly.
+
+---
+
 ## Usage
 
 ### Installation
