@@ -3,7 +3,12 @@ PyTorch Symbolic Regression
 ===========================
 A differentiable symbolic regression implementation that mirrors PySR's design philosophy.
 
-Core Modules:
+This is the legacy package structure. For the main DeepChem-integrated version,
+please use the `symbolic_regression` subpackage:
+
+    from symbolic_regression import SymbolicRegressorModel
+
+Core Modules (Legacy):
 - operators: Defines the fixed operator space (binary, unary, power operators)
 - nodes: Symbolic tree node classes (Variable, Constant, Operator nodes)
 - model: Main symbolic regression models (SymbolicRegressor, MultiTermRegressor)
@@ -15,63 +20,59 @@ Enhanced Modules:
 - dynamic_structure: Dynamic tree structure modification during training
 - speed_optimizations: Performance optimizations (caching, vectorization, parallel eval)
 - hybrid_trainer: Combined evolutionary + gradient optimization
-
-Example Usage:
-    # Standard gradient-based training
-    from model import SymbolicRegressor
-    from trainer import SymbolicRegressionTrainer
-    from simplify import print_expression_report
-    
-    model = SymbolicRegressor(n_features=1, max_depth=3)
-    trainer = SymbolicRegressionTrainer(model, learning_rate=0.01)
-    trainer.fit(x_train, y_train, n_epochs=1000)
-    print_expression_report(model, var_names=["x"])
-    
-    # Hybrid evolutionary + gradient training
-    from hybrid_trainer import train_hybrid, HybridTrainerConfig
-    
-    config = HybridTrainerConfig(n_epochs=1000, population_size=20)
-    model, results = train_hybrid(x, y, n_features=2, config=config)
 """
 
 __version__ = "2.0.0"
 __author__ = "PyTorch Symbolic Regression"
 
-from .operators import (
-    OperatorRegistry,
-    BinaryOperatorMixture,
-    UnaryOperatorMixture,
-    LearnablePower
-)
+# Only import if modules exist (for backward compatibility)
+try:
+    from .operators import (
+        OperatorRegistry,
+        BinaryOperatorMixture,
+        UnaryOperatorMixture,
+        LearnablePower
+    )
+except ImportError:
+    pass
 
-from .nodes import (
-    SymbolicNode,
-    VariableNode,
-    ConstantNode,
+try:
+    from .nodes import (
+        SymbolicNode,
+        VariableNode,
+        ConstantNode,
     UnaryOpNode,
     BinaryOpNode,
     PowerNode,
     LinearCombinationNode,
     WeightedInputNode
 )
+try:
+    from .model import (
+        SymbolicExpression,
+        SymbolicRegressor,
+        MultiTermRegressor
+    )
+except ImportError:
+    pass
 
-from .model import (
-    SymbolicExpression,
-    SymbolicRegressor,
-    MultiTermRegressor
-)
+try:
+    from .trainer import (
+        SymbolicRegressionTrainer,
+        train_symbolic_regressor
+    )
+except ImportError:
+    pass
 
-from .trainer import (
-    SymbolicRegressionTrainer,
-    train_symbolic_regressor
-)
-
-from .simplify import (
-    ExpressionSimplifier,
-    extract_expression,
-    print_expression_report,
-    ExpressionEvaluator
-)
+try:
+    from .simplify import (
+        ExpressionSimplifier,
+        extract_expression,
+        print_expression_report,
+        ExpressionEvaluator
+    )
+except ImportError:
+    pass
 
 # Enhanced modules - import conditionally to avoid issues if dependencies missing
 try:

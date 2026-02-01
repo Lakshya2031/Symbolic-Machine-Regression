@@ -1,3 +1,5 @@
 torch>=1.9.0
 numpy>=1.19.0
 matplotlib>=3.3.0
+# DeepChem integration (optional but recommended)
+deepchem>=2.7.0
