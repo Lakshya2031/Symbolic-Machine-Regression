@@ -41,12 +41,15 @@ try:
         SymbolicNode,
         VariableNode,
         ConstantNode,
-    UnaryOpNode,
-    BinaryOpNode,
-    PowerNode,
-    LinearCombinationNode,
-    WeightedInputNode
-)
+        UnaryOpNode,
+        BinaryOpNode,
+        PowerNode,
+        LinearCombinationNode,
+        WeightedInputNode
+    )
+except ImportError:
+    pass
+
 try:
     from .model import (
         SymbolicExpression,

@@ -1,0 +1,44 @@
+{
+  "delaney": {
+    "linear": {
+      "rmse": 0.5613905774377974,
+      "r2": 0.7003781199455261
+    },
+    "random_forest": {
+      "rmse": 0.39155062114878714,
+      "r2": 0.8542464777961549
+    },
+    "simple_symbolic": {
+      "rmse": 0.5770094650953317,
+      "r2": 0.6834741830825806,
+      "formula": "0.044*MolWt + -0.423*LogP + 0.174*TPSA + 0.058*NumHDonors + 0.124*NumHAcceptors + -0.023*NumRotatableBonds + -0.023*NumAromaticRings + -0.139*RingCount + -0.046*FractionCSP3 + -0.293*HeavyAtomCount + 0.084*NOCount + 0.042*NHOHCount + 0.100*Chi0 + -0.068*Kappa1 + -0.374*LabuteASA + -0.026*MolWt\u00b2 + 0.026*MolWt*NumHDonors + 0.052*MolWt*NumRotatableBonds + -0.040*MolWt*NumAromaticRings + 0.126*MolWt*FractionCSP3 + 0.012*MolWt*HeavyAtomCount + 0.018*MolWt*NOCount + 0.039*MolWt*NHOHCount + 0.017*MolWt*Kappa1 + 0.039*LogP\u00b2 + 0.010*LogP*TPSA + 0.071*LogP*NumHDonors + -0.069*LogP*NumHAcceptors + -0.022*LogP*NumRotatableBonds + -0.127*LogP*NumAromaticRings + 0.062*LogP*RingCount + -0.090*LogP*FractionCSP3 + -0.014*LogP*HeavyAtomCount + 0.020*LogP*NOCount + 0.064*LogP*NHOHCount + -0.012*LogP*Chi0 + -0.015*LogP*Kappa1 + 0.015*LogP*LabuteASA + -0.039*TPSA\u00b2 + -0.019*TPSA*NumHAcceptors + -0.060*TPSA*NumAromaticRings + 0.083*TPSA*FractionCSP3 + -0.037*TPSA*NOCount + -0.012*TPSA*Chi0 + 0.022*NumHDonors\u00b2 + -0.024*NumHDonors*NumRotatableBonds + -0.022*NumHDonors*NumAromaticRings + -0.030*NumHDonors*RingCount + -0.036*NumHDonors*FractionCSP3 + -0.012*NumHDonors*HeavyAtomCount + -0.016*NumHDonors*NOCount + 0.024*NumHDonors*NHOHCount + -0.050*NumHAcceptors\u00b2 + -0.044*NumHAcceptors*NumAromaticRings + 0.015*NumHAcceptors*RingCount + 0.042*NumHAcceptors*FractionCSP3 + -0.029*NumHAcceptors*NOCount + -0.021*NumRotatableBonds*NumAromaticRings + -0.044*NumRotatableBonds*RingCount + -0.107*NumRotatableBonds*FractionCSP3 + 0.042*NumRotatableBonds*Kappa1 + 0.013*NumRotatableBonds*LabuteASA + -0.030*NumAromaticRings\u00b2 + -0.030*NumAromaticRings*RingCount + -0.083*NumAromaticRings*FractionCSP3 + 0.035*NumAromaticRings*HeavyAtomCount + 0.047*NumAromaticRings*NOCount + -0.036*NumAromaticRings*NHOHCount + 0.049*NumAromaticRings*Chi0 + 0.025*NumAromaticRings*LabuteASA + 0.018*RingCount\u00b2 + -0.029*RingCount*FractionCSP3 + 0.038*RingCount*NOCount + -0.021*RingCount*NHOHCount + 0.012*RingCount*LabuteASA + -0.029*FractionCSP3*HeavyAtomCount + 0.021*FractionCSP3*NOCount + -0.017*FractionCSP3*NHOHCount + -0.016*FractionCSP3*Chi0 + 0.026*FractionCSP3*Kappa1 + 0.016*HeavyAtomCount*NOCount + 0.011*HeavyAtomCount*LabuteASA + -0.030*NOCount\u00b2 + -0.015*NOCount*NHOHCount + 0.024*NOCount*Kappa1 + 0.018*NOCount*LabuteASA + 0.012*NHOHCount*Kappa1 + 0.023*Kappa1\u00b2 + 0.015*Kappa1*LabuteASA + 0.013*LabuteASA\u00b2 + 0.078"
+    },
+    "deepchem_symbolic": {
+      "rmse": 0.5213072400945356,
+      "r2": 0.7416367530822754,
+      "complexity": 3.775597333908081,
+      "formula": "((1.3611*NumHAcceptors - 2.6379*RingCount)) - 0.1015"
+    }
+  },
+  "lipo": {
+    "linear": {
+      "rmse": 0.8063668439905313,
+      "r2": 0.21757078170776367
+    },
+    "random_forest": {
+      "rmse": 0.7480509305297919,
+      "r2": 0.32664815802402025
+    },
+    "simple_symbolic": {
+      "rmse": 0.7908765505755463,
+      "r2": 0.24734294414520264,
+      "formula": "-0.069*MolWt + 0.367*LogP + -0.111*TPSA + -0.222*NumHDonors + 0.094*NumHAcceptors + -0.109*NumRotatableBonds + 0.169*NumAromaticRings + 0.081*RingCount + 0.078*FractionCSP3 + 0.133*HeavyAtomCount + 0.030*NOCount + 0.117*NHOHCount + -0.065*Kappa1 + -0.048*LabuteASA + -0.024*MolWt*LogP + -0.013*MolWt*TPSA + -0.020*MolWt*NumHAcceptors + 0.039*MolWt*FractionCSP3 + -0.013*MolWt*NOCount + -0.088*LogP\u00b2 + -0.018*LogP*TPSA + 0.043*LogP*NumHAcceptors + -0.010*LogP*NumRotatableBonds + -0.020*LogP*NumAromaticRings + 0.044*LogP*RingCount + -0.013*LogP*Chi0 + -0.018*LogP*Kappa1 + -0.016*LogP*LabuteASA + 0.036*TPSA*NumHAcceptors + -0.010*TPSA*NumRotatableBonds + -0.032*TPSA*NumAromaticRings + 0.097*TPSA*FractionCSP3 + -0.013*TPSA*HeavyAtomCount + 0.011*TPSA*NHOHCount + -0.013*TPSA*Chi0 + -0.012*TPSA*Kappa1 + -0.013*TPSA*LabuteASA + 0.013*NumHDonors\u00b2 + -0.039*NumHDonors*NumAromaticRings + 0.044*NumHDonors*RingCount + 0.013*NumHDonors*NHOHCount + 0.092*NumHAcceptors\u00b2 + 0.017*NumHAcceptors*NumRotatableBonds + 0.047*NumHAcceptors*NumAromaticRings + -0.087*NumHAcceptors*RingCount + -0.025*NumHAcceptors*FractionCSP3 + -0.020*NumHAcceptors*HeavyAtomCount + 0.035*NumHAcceptors*NOCount + 0.012*NumHAcceptors*NHOHCount + -0.016*NumHAcceptors*Chi0 + -0.019*NumHAcceptors*Kappa1 + -0.023*NumHAcceptors*LabuteASA + 0.080*NumRotatableBonds*NumAromaticRings + 0.033*NumRotatableBonds*RingCount + 0.010*NumRotatableBonds*HeavyAtomCount + -0.020*NumAromaticRings\u00b2 + 0.014*NumAromaticRings*RingCount + 0.013*NumAromaticRings*HeavyAtomCount + 0.039*NumAromaticRings*NOCount + -0.033*NumAromaticRings*Kappa1 + 0.013*NumAromaticRings*LabuteASA + -0.018*RingCount\u00b2 + -0.075*RingCount*FractionCSP3 + 0.012*RingCount*NOCount + 0.038*FractionCSP3\u00b2 + 0.015*FractionCSP3*HeavyAtomCount + 0.040*FractionCSP3*NOCount + -0.063*FractionCSP3*NHOHCount + 0.027*FractionCSP3*Chi0 + 0.030*FractionCSP3*Kappa1 + -0.012*NOCount*Kappa1 + -0.011*NOCount*LabuteASA + 0.015*NHOHCount\u00b2 + -0.039"
+    },
+    "deepchem_symbolic": {
+      "rmse": 0.816341780895961,
+      "r2": 0.19809341430664062,
+      "complexity": 3.31746506690979,
+      "formula": "0.5697 * ((1.7267*LogP - 1.2392*RingCount))"
+    }
+  }
+}

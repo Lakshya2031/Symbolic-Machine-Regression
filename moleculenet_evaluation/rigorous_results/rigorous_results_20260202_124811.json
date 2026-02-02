@@ -1,0 +1,122 @@
+{
+  "timestamp": "2026-02-02T12:11:12.635014",
+  "config": {
+    "datasets": [
+      "delaney",
+      "lipo"
+    ],
+    "n_seeds": 3,
+    "seeds": [
+      42,
+      123,
+      456
+    ],
+    "max_depth": 4,
+    "n_candidates": 7,
+    "complexity_weight": 0.005,
+    "learning_rate": 0.01,
+    "batch_size": 64,
+    "max_epochs": 100,
+    "early_stopping_patience": 20,
+    "min_improvement": 0.0001,
+    "overfit_threshold": 2.0,
+    "gradient_clip": 10.0,
+    "max_loss_value": 1000000.0
+  },
+  "datasets": {
+    "delaney": {
+      "n_runs": 3,
+      "test_rmse_mean": 0.7445606036964388,
+      "test_rmse_std": 0.027678489627758224,
+      "test_r2_mean": 0.47223198283249707,
+      "test_r2_std": 0.03965220164233857,
+      "test_mae_mean": 0.5883835040505573,
+      "test_mae_std": 0.0312545454878092,
+      "best_rmse": 0.720293435079945,
+      "best_r2": 0.5067556411551338,
+      "best_formula": "(log(((1.0720*x1011)^2 * (-0.8698*x227)))) - 0.6019",
+      "overfit_rate": 1.0,
+      "numerical_issue_rate": 0.0,
+      "early_stop_rate": 0.0,
+      "runs": [
+        {
+          "seed": 42,
+          "test_rmse": 0.7300957561408544,
+          "test_r2": 0.4932393763526416,
+          "test_mae": 0.5714388657695514,
+          "best_epoch": 30,
+          "training_time": 264.71673011779785,
+          "overfit_detected": true,
+          "formula": "(1.3000 * (log((log(0.9127*x366))^2))) - 0.5699"
+        },
+        {
+          "seed": 123,
+          "test_rmse": 0.720293435079945,
+          "test_r2": 0.5067556411551338,
+          "test_mae": 0.5615014833496955,
+          "best_epoch": 30,
+          "training_time": 187.24501633644104,
+          "overfit_detected": true,
+          "formula": "(log(((1.0720*x1011)^2 * (-0.8698*x227)))) - 0.6019"
+        },
+        {
+          "seed": 456,
+          "test_rmse": 0.783292619868517,
+          "test_r2": 0.41670093098971583,
+          "test_mae": 0.6322101630324248,
+          "best_epoch": 30,
+          "training_time": 257.32518696784973,
+          "overfit_detected": true,
+          "formula": "(log(((-0.9213*x723))^2)) - 1.1663"
+        }
+      ]
+    },
+    "lipo": {
+      "n_runs": 3,
+      "test_rmse_mean": 0.8754847648662025,
+      "test_rmse_std": 0.0061499533770481025,
+      "test_r2_mean": 0.07764451855588435,
+      "test_r2_std": 0.01298736885766988,
+      "test_mae_mean": 0.6719783002711107,
+      "test_mae_std": 0.002366709942014476,
+      "best_rmse": 0.8701652735798582,
+      "best_r2": 0.08886398743513668,
+      "best_formula": "(0.7566 * ((0.9001*x17 - 1.1537*x713))) - 0.7856",
+      "overfit_rate": 1.0,
+      "numerical_issue_rate": 0.0,
+      "early_stop_rate": 0.0,
+      "runs": [
+        {
+          "seed": 42,
+          "test_rmse": 0.8701652735798582,
+          "test_r2": 0.08886398743513668,
+          "test_mae": 0.6689608025743702,
+          "best_epoch": 10,
+          "training_time": 867.4418330192566,
+          "overfit_detected": true,
+          "formula": "(0.7566 * ((0.9001*x17 - 1.1537*x713))) - 0.7856"
+        },
+        {
+          "seed": 123,
+          "test_rmse": 0.8841035497902218,
+          "test_r2": 0.05944112446870631,
+          "test_mae": 0.6722328542932798,
+          "best_epoch": 10,
+          "training_time": 317.409259557724,
+          "overfit_detected": true,
+          "formula": "(0.4454 * (log((-x703)))) - 0.6051"
+        },
+        {
+          "seed": 456,
+          "test_rmse": 0.8721854712285277,
+          "test_r2": 0.08462844376381007,
+          "test_mae": 0.674741243945682,
+          "best_epoch": 10,
+          "training_time": 298.75156831741333,
+          "overfit_detected": true,
+          "formula": "(0.4516 * (log(log(sqrt(1.1364*x950))))) - 0.6126"
+        }
+      ]
+    }
+  }
+}

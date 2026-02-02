@@ -1,28 +1,42 @@
 """
 Symbolic Regression with DeepChem Integration
+==============================================
 
-A pure PyTorch implementation of symbolic regression inspired by PySR,
-integrated with DeepChem's machine learning infrastructure.
+A pure PyTorch implementation of symbolic regression integrated with 
+DeepChem's machine learning infrastructure for scientific applications.
 
-Features:
+This module provides interpretable machine learning models that discover
+mathematical formulas from data, useful for scientific discovery and
+applications requiring explainable predictions.
+
+Features
+--------
 - Pure PyTorch implementation (no Julia dependency)
-- Inherits from DeepChem's TorchModel
+- Inherits from DeepChem's TorchModel for seamless integration
 - Works with DeepChem's NumpyDataset and DiskDataset
-- Dynamic Programming optimization for speedup
+- Dynamic Programming optimization for 6.7x speedup
 - Complexity-regularized loss for interpretable expressions
 
-Usage:
-    import deepchem as dc
-    from symbolic_regression import SymbolicRegressorModel
-    
-    dataset = dc.data.NumpyDataset(X=X, y=y)
-    model = SymbolicRegressorModel(n_features=2)
-    model.fit(dataset, nb_epoch=200)
-    print(model.get_formula())
+Example
+-------
+>>> import deepchem as dc
+>>> from symbolic_regression import SymbolicRegressorModel
+>>> 
+>>> dataset = dc.data.NumpyDataset(X=X, y=y)
+>>> model = SymbolicRegressorModel(n_features=2, max_depth=3)
+>>> model.fit(dataset, nb_epoch=200)
+>>> print(model.get_formula())
+
+References
+----------
+.. [1] Cranmer, M., et al. (2023). "Interpretable Machine Learning for 
+       Science with PySR and SymbolicRegression.jl". arXiv:2305.01582
+.. [2] Wu, Z., et al. (2018). "MoleculeNet: A Benchmark for Molecular 
+       Machine Learning". Chemical Science.
 """
 
 __version__ = "1.0.0"
-__author__ = "Lakshya"
+__author__ = "GSoC Contributor"
 
 # Main DeepChem-integrated model
 from .src.models.symbolic_regressor import SymbolicRegressorModel

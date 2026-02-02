@@ -1,0 +1,19 @@
+{
+  "timestamp": "2026-02-02T11:42:15.104203",
+  "featurizer": "ECFP",
+  "training_config": {
+    "max_depth": 4,
+    "n_candidates": 7,
+    "complexity_weight": 0.005,
+    "learning_rate": 0.01,
+    "n_epochs": 150,
+    "batch_size": 64,
+    "use_dp": true,
+    "verbose": true
+  },
+  "datasets": {
+    "delaney": {
+      "error": "This class requires RDKit to be installed."
+    }
+  }
+}

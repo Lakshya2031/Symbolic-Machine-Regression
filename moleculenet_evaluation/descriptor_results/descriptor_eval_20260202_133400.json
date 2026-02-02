@@ -1,0 +1,61 @@
+{
+  "timestamp": "2026-02-02T13:25:54.930404",
+  "feature_type": "RDKit_Physicochemical_Descriptors",
+  "n_features": 30,
+  "datasets": {
+    "delaney": {
+      "n_train": 902,
+      "n_valid": 113,
+      "n_test": 113,
+      "n_features": 30,
+      "baselines": {
+        "linear_regression": {
+          "rmse": 0.5120823856693663,
+          "r2": 0.7506996393203735
+        },
+        "random_forest": {
+          "rmse": 0.46511850569673346,
+          "r2": 0.794330230054215
+        }
+      },
+      "symbolic_regression": {
+        "test_rmse": 1.0861759610069393,
+        "test_r2": -0.12161457538604736,
+        "test_mae": 0.8513091206550598,
+        "formula": "(0.6309 * ((0.6187*HallKierAlpha - NumRotatableBonds))) - 0.2409",
+        "complexity": 7.11693000793457,
+        "best_epoch": 4,
+        "early_stopped": true,
+        "overfit_detected": true,
+        "training_time": 12.060561656951904
+      }
+    },
+    "lipo": {
+      "n_train": 3360,
+      "n_valid": 420,
+      "n_test": 420,
+      "n_features": 30,
+      "baselines": {
+        "linear_regression": {
+          "rmse": 0.8214806368421248,
+          "r2": 0.18796569108963013
+        },
+        "random_forest": {
+          "rmse": 0.6960272572860757,
+          "r2": 0.41704878424319214
+        }
+      },
+      "symbolic_regression": {
+        "test_rmse": 0.8201219973294782,
+        "test_r2": 0.19064944982528687,
+        "test_mae": 0.6357653737068176,
+        "formula": "0.4482 * ((7.6553*MinPartialCharge - 4.8286*NumRotatableBonds))",
+        "complexity": 3.03206729888916,
+        "best_epoch": 195,
+        "early_stopped": false,
+        "overfit_detected": false,
+        "training_time": 451.9401659965515
+      }
+    }
+  }
+}
