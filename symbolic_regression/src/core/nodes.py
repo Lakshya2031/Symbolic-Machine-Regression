@@ -1,18 +1,24 @@
 """
 Symbolic Tree Nodes - Pure PyTorch Implementation
 
-Building blocks for constructing symbolic expressions as computation graphs.
-Each node type represents a component of the expression tree.
+These are the building blocks for expression trees. Each node is a PyTorch
+module that can be forward-passed and backpropped through.
 
-Node Types:
-    - VariableNode: Input features x_i
-    - ConstantNode: Learnable scalar constants
-    - WeightedInputNode: Soft selection over input variables
-    - UnaryOpNode: Unary operator application (sin, cos, exp, etc.)
-    - BinaryOpNode: Binary operator application (+, -, *, /)
-    - PowerNode: Learnable exponent x^p
+The main node types:
+    - VariableNode: Just picks x_i from input
+    - ConstantNode: Learnable scalar (gets optimized during training)
+    - WeightedInputNode: Soft attention over all inputs (this one's interesting)
+    - UnaryOpNode: sin, cos, exp, log, etc.
+    - BinaryOpNode: +, -, *, /
+    - PowerNode: x^p where p is learnable
 
-All nodes are PyTorch nn.Module instances.
+Design notes:
+- All nodes are nn.Module so they play nice with PyTorch's autograd
+- Complexity calculation is built-in (needed for regularization)
+- to_expression() vs simplify() - one shows raw weights, other discretizes
+
+TODO: Maybe add a "SumNode" for sum-of-terms patterns? Might help with
+polynomial-like expressions. Worth trying later.
 """
 
 import torch
@@ -29,13 +35,13 @@ from .operators import (
 
 class SymbolicNode(nn.Module, ABC):
     """
-    Abstract base class for symbolic tree nodes.
+    Base class for all nodes in the expression tree.
     
-    All nodes must implement:
-    - forward(): Evaluate the node on input data
-    - get_complexity(): Return the complexity cost
-    - to_expression(): Convert to human-readable string
-    - simplify(): Get simplified expression (discretized operators)
+    Subclasses need to implement:
+    - forward(): The actual computation
+    - get_complexity(): How "expensive" is this subtree
+    - to_expression(): Human-readable version
+    - simplify(): Discretized/cleaned up version
     """
     
     @abstractmethod
@@ -61,10 +67,11 @@ class SymbolicNode(nn.Module, ABC):
 
 class VariableNode(SymbolicNode):
     """
-    Node representing a single input variable x_i.
+    Simplest node - just picks one column from the input.
     
-    This is the simplest leaf node - it just selects one column
-    from the input tensor.
+    Example: VariableNode(2) on input [[a,b,c,d]] returns [[c]]
+    
+    Complexity is 0.5 (small penalty for using a variable).
     """
     
     def __init__(self, var_index: int):
@@ -88,10 +95,12 @@ class VariableNode(SymbolicNode):
 
 class ConstantNode(SymbolicNode):
     """
-    Node representing a learnable constant value.
+    Learnable constant (scalar).
     
-    The constant is a learnable parameter that will be optimized
-    during training to best fit the target function.
+    This is what allows expressions like "2.5 * x0 + 3.7" - the 2.5 and 3.7
+    are ConstantNodes that get optimized via gradient descent.
+    
+    Init value matters more than you'd think - bad inits can get stuck.
     """
     
     def __init__(self, init_value: float = 1.0):

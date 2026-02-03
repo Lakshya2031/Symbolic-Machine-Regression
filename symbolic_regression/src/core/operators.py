@@ -1,11 +1,22 @@
 """
-Operator Definitions - Pure PyTorch Implementation
+Math Operators for Symbolic Regression
 
-Fixed operator space for symbolic regression including binary operators
-(addition, subtraction, multiplication, protected division) and unary
-operators (sin, cos, exp, protected log, protected sqrt).
+This file defines all the mathematical operations that can appear in our
+discovered formulas. The tricky part is making them "safe" - we can't have
+the training crash because of division by zero or log of negative numbers.
 
-All operators are differentiable PyTorch functions with numerical stability.
+I spent way too much time debugging NaN issues before I learned:
+1. ALWAYS protect division (even small denominators cause problems)
+2. ALWAYS clamp exp() input (exp(100) = infinity)  
+3. ALWAYS use abs() before log() and sqrt()
+
+The epsilon values (1e-8, 1e-4, etc.) were tuned through trial and error.
+Too small = still get numerical issues. Too large = affects accuracy.
+
+Lessons learned the hard way:
+- torch.sign(0) = 0, which breaks protected_div when y=0
+- exp(710) overflows float32, so we clamp at 50 to be safe
+- sqrt gradient at 0 is undefined, need the epsilon inside sqrt
 """
 
 import torch
@@ -13,9 +24,11 @@ import torch.nn as nn
 from typing import Callable, List, Tuple
 
 # Small constant for numerical stability
+# Tried 1e-10 first, but that's too small for float32
 EPS = 1e-8
 
 # Maximum output value to prevent overflow
+# These seem aggressive but trust me, you need them
 MAX_OUTPUT = 1e6
 MIN_OUTPUT = -1e6
 

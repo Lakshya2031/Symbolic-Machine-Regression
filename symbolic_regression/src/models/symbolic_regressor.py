@@ -1,27 +1,27 @@
 """
-DeepChem-Compatible Symbolic Regression Model
+Symbolic Regression Model with DeepChem Integration
 
-Provides symbolic regression models that inherit from DeepChem's TorchModel,
-enabling integration with DeepChem's datasets and pipelines.
+This is the main model file - it inherits from DeepChem's TorchModel so we can
+use all the nice dataset handling and training infrastructure they've built.
 
-Features:
-- Pure PyTorch implementation (no Julia dependency)
-- Inherits from DeepChem's TorchModel
-- Works with NumpyDataset and DiskDataset
-- Standard .fit() / .predict() API
-- GPU acceleration support
+The idea is pretty simple:
+1. Maintain a pool of candidate expression trees
+2. Each tree is a differentiable computation graph  
+3. Use gradient descent to optimize the weights/constants
+4. Softmax over candidates to pick the best one
 
-Usage:
-    import deepchem as dc
-    from symbolic_regression import SymbolicRegressorModel
-    
-    X = np.random.randn(1000, 2)
-    y = 0.5 * X[:, 0] * X[:, 1]**2
-    dataset = dc.data.NumpyDataset(X=X, y=y)
-    
-    model = SymbolicRegressorModel(n_features=2, max_depth=3)
-    model.fit(dataset, nb_epoch=100)
-    formula = model.get_formula()
+I tried a few different approaches before landing on this:
+- Genetic algorithms: too slow, hard to tune
+- Pure enumeration: doesn't scale beyond depth 2
+- This approach: gradient-based, fast, works well in practice
+
+NOTE: This requires DeepChem to be installed. If you just want the core
+symbolic regression without DeepChem, look at the standalone version in
+the examples folder.
+
+TODO: Add support for multi-output regression
+TODO: Implement model checkpointing during training
+TODO: Add learning rate scheduling (currently fixed LR)
 """
 
 import torch

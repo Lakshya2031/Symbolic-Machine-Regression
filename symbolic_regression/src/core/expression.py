@@ -1,7 +1,18 @@
 """
-Symbolic Expression Module
+Expression Tree Builder
 
-Combines nodes into complete expression trees with different structures.
+This module creates complete expression trees from nodes. Different
+tree structures work better for different types of formulas:
+
+- "binary_tree": Good for arithmetic like (a+b)*(c-d)
+- "unary_chain": Good for sin(cos(x)) type expressions  
+- "mixed": General purpose, handles most cases
+
+I experimented a lot with tree structures. The mixed type works best
+in practice because real formulas often combine both patterns.
+
+Note: Tree depth trades off expressiveness vs. training difficulty.
+Depth 3 is usually enough, depth 4+ can overfit easily.
 """
 
 import torch
@@ -18,15 +29,15 @@ from .nodes import (
 
 class SymbolicExpression(nn.Module):
     """
-    A single symbolic expression with fixed tree structure.
+    Complete expression tree with learnable structure.
     
-    The structure is determined at initialization and the operators/weights
-    are learned during training.
+    The tree shape is fixed at init, but all the operators and weights
+    inside are learnable parameters that get optimized.
     
-    Structure Types:
-        - "binary_tree": Full binary tree (most expressive)
-        - "unary_chain": Chain of unary operators (for transcendental functions)
-        - "mixed": Combination of binary and unary nodes
+    Three structure types available:
+        - "binary_tree": Full binary tree (most expressive but can overfit)
+        - "unary_chain": Chain of unary ops (good for transcendentals)
+        - "mixed": Hybrid approach (default, works well in practice)
     """
     
     def __init__(
